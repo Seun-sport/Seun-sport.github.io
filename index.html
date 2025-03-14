@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Database Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2E7D32;
+            --accent-color: #8BC34A;
+            --text-color: #333333;
+            --background-color: #F5F5F5;
+            --card-color: #FFFFFF;
+            --level1-color: #C5E1A5;
+            --level2-color: #AED581;
+            --level3-color: #9CCC65;
+            --level4-color: #8BC34A;
+            --level5-color: #7CB342;
+            --level6-color: #689F38;
+            --level7-color: #558B2F;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--card-color);
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background-color: var(--card-color);
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .footer-nav {
+            display: flex;
+            position: sticky;
+            bottom: 0;
+            background-color: var(--card-color);
+            border-top: 1px solid #ddd;
+            padding: 0.75rem 0;
+        }
+        
+        .footer-nav-item {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        
+        .footer-nav-item i {
+            display: block;
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .tree-container {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+        
+        .member-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .certificate {
+            border: 2px solid #ddd;
+            padding: 2rem;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 1rem;
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .level-1 { background-color: var(--level1-color); color: #333; }
+        .level-2 { background-color: var(--level2-color); color: #333; }
+        .level-3 { background-color: var(--level3-color); color: #333; }
+        .level-4 { background-color: var(--level4-color); color: white; }
+        .level-5 { background-color: var(--level5-color); color: white; }
+        .level-6 { background-color: var(--level6-color); color: white; }
+        .level-7 { background-color: var(--level7-color); color: white; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-user-circle text-2xl mr-2"></i>
+                    <h1 class="text-xl font-bold">Member Portal</h1>
+                </div>
+                <div>
+                    <i class="fas fa-bell text-xl"></i>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="p-4">
+            <!-- Dashboard View -->
+            <div id="dashboard-view">
+                <div class="bg-white rounded-lg p-4 mb-4 shadow">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-bold">Welcome, John Doe</h2>
+                        <span class="level-badge level-3">Level 3</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">Member #: MBR-2025-001</p>
+                    <div class="bg-green-50 p-3 rounded-lg mb-4">
+                        <p class="text-sm text-gray-600">Current Income</p>
+                        <p class="text-2xl font-bold text-green-700">N32,000</p>
+                    </div>
+                    
+                    <div class="flex justify-between mb-4">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Joined Date</p>
+                            <p class="font-bold">Jan 15, 2025</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Direct Downline</p>
+                            <p class="font-bold">5</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">Total Network</p>
+                            <p class="font-bold">12</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-4 shadow text-center">
+                        <i class="fas fa-users text-2xl text-green-600 mb-2"></i>
+                        <p class="text-sm font-bold">My Network</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow text-center">
+                        <i class="fas fa-user-plus text-2xl text-blue-600 mb-2"></i>
+                        <p class="text-sm font-bold">Add Member</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow text-center">
+                        <i class="fas fa-certificate text-2xl text-yellow-600 mb-2"></i>
+                        <p class="text-sm font-bold">Certificate</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow text-center">
+                        <i class="fas fa-chart-line text-2xl text-purple-600 mb-2"></i>
+                        <p class="text-sm font-bold">Income Stats</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-4 shadow mb-4">
+                    <h3 class="font-bold mb-2">Next Level Progress</h3>
+                    <div class="mb-2">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Level 3</span>
+                            <span>Level 4 (N128,000)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-green-600 h-2.5 rounded-full" style="width: 70%"></div>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-1">Need 3 more direct members to reach Level 4</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="font-bold mb-2">Recent Activities</h3>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-3">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="font-medium">New member registered</p>
+                                    <p class="text-sm text-gray-600">Jane Smith joined your network</p>
+                                </div>
+                                <p class="text-xs text-gray-500">2 hours ago</p>
+                            </div>
+                        </li>
+                        <li class="py-3">
+                            <div class="flex justify-between">
+                                <div>
+                                    <p class="font-medium">Income earned</p>
+                                    <p class="text-sm text-gray-600">N8,000 credited for new downline</p>
+                                </div>
+                                <p class="text-xs text-gray
