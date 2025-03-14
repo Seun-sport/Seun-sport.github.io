@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Database Portal</title>
@@ -145,6 +146,48 @@
         .level-7 { background-color: var(--level7-color); color: white; }
     </style>
 </head>
+    <script>
+  // Replace these with your Supabase URL and API Key
+  const supabaseUrl = 'YOUR_SUPABASE_URL';
+  const supabaseKey = 'YOUR_SUPABASE_KEY';
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+  // Function to fetch members from the database
+  async function fetchMembers() {
+    const { data, error } = await supabase
+      .from('members') // Replace 'members' with your table name
+      .select('*'); // Select all rows
+
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      displayMembers(data); // Display the data on the website
+    }
+  }
+
+  // Function to display members on the website
+  function displayMembers(members) {
+    const memberList = document.getElementById('member-list');
+    memberList.innerHTML = ''; // Clear previous data
+    members.forEach(member => {
+      const li = document.createElement('li');
+      li.className = 'py-3';
+      li.innerHTML = `
+        <div class="flex justify-between">
+          <div>
+            <p class="font-medium">${member.name}</p>
+            <p class="text-sm text-gray-600">${member.email}</p>
+          </div>
+          <p class="text-xs text-gray-500">Level: ${member.membership_level}</p>
+        </div>
+      `;
+      memberList.appendChild(li);
+    });
+  }
+
+  // Call the function to fetch and display members when the page loads
+  fetchMembers();
+</script>
 <body>
     <div class="app-container">
         <!-- Header -->
@@ -161,6 +204,9 @@
         </header>
         
         <!-- Main Content -->
+        <ul id="member-list" class="divide-y divide-gray-200">
+  <!-- Members will be dynamically inserted here -->
+</ul>
         <main class="p-4">
             <!-- Dashboard View -->
             <div id="dashboard-view">
