@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beta Life Investment - Member Database Portal</title>
+    <style>
+        .level-7 { background-color: var(--level7-color); color: white; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <h1 class="text-xl font-bold">Beta Life Investment - Member Portal</h1>
+        </header>
+
+        <!-- Main Content -->
+        <ul id="member-list" class="divide-y divide-gray-200">
+            <!-- Members will be dynamically inserted here -->
+        </ul>
+
+        <main class="p-4">
+            <!-- Dashboard View -->
+            <div id="dashboard-view"></div>
+        </main>
+    </div>
+
+    <script>
+        // Supabase Credentials
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_KEY';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Membership Levels & Earnings Structure
+        const levelRequirements = [0, 4, 16, 64, 256, 1024, 4096, 16384];
+        const earningsPerLevel = [0, 2000, 8000, 32000, 128000, 512000, 2048000, 8192000];
+        const maxTotalEarnings = 10922000; // Cut-off limit
+
+        // Function to fetch members from database
+        async function fetchMembers() {
+            const { data, error } = await supabase.from('members').select('*');
+            if (error) {
+                console.error('Error fetching data:', error);
+            } else {
+                displayMembers(data);
+            }
+        }
+
+        // Function to display members in the portal
+        function displayMembers(members) {
+            const memberList = document.getElementById('member-list');
+            memberList.innerHTML = '';
+
+            members.forEach(member => {
+                const li = document.createElement('li');
+                li.className = 'py-3';
+                li.innerHTML = `
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="font-medium">${member.name}</p>
+                            <p class="text-sm text-gray-600">${member.email}</p>
+                            <p class="text-xs text-gray-500">Referral: ${member.referral_name} (Form #${member.referral_form_number})</p>
+                        </div>
+                        <p class="text-xs text-gray-500">Level: ${member.membership_level} | Earnings: ₦${member.earnings}</p>
+                    </div>
+                `;
+                memberList.appendChild(li);
+            });
+        }
+
+        // Function to update membership levels & earnings
+        async function updateMemberLevels() {
+            const { data: members, error } = await supabase.from('members').select('*');
+
+            if (error) {
+                console.error('Error fetching members:', error);
+                return;
+            }
+
+            for (let member of members) {
+                const { id, referrals_count, membership_level, earnings } = member;
+                let newLevel = membership_level;
+                let newEarnings = earnings;
+
+                for (let i = membership_level; i <= 7; i++) {
+                    if (referrals_count >= levelRequirements[i]) {
+                        newLevel = i;
+                        newEarnings = earningsPerLevel[i];
+                    }
+                }
+
+                // Remove member if total earnings exceed ₦10,922,000
+                if (newEarnings >= maxTotalEarnings) {
+                    await supabase.from('members').delete().eq('id', id);
+                    console.log(`Member ${member.name} removed after reaching ₦${maxTotalEarnings}`);
+                } else if (newLevel !== membership_level || newEarnings !== earnings) {
+                    await supabase.from('members').update({
+                        membership_level: newLevel,
+                        earnings: newEarnings
+                    }).eq('id', id);
+                    console.log(`Updated ${member.name} to Level ${newLevel} with earnings ₦${newEarnings}`);
+                }
+            }
+        }
+
+        // Auto-update membership every 60 seconds
+        setInterval(updateMemberLevels, 60000);
+
+        // Fetch members when page loads
+        fetchMembers();
+    </script>
+</body>
+</html>
